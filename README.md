@@ -7,7 +7,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/CaelenO42/Completionist">
-    <img src="img/logo_full.svg" alt="Logo" width="auto" height="50">
+    <img src="img/logo_full.svg" alt="Logo" width="300" height="auto">
   </a>
   <p align="center">
     A Flask app for simple task management, categorization, and filtering
