@@ -1,8 +1,5 @@
 <a id="readme-top"></a>
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Issues][issues-shield]][issues-url]
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -12,7 +9,10 @@
   <p align="center">
     A Flask app for simple task management, categorization, and filtering
     <br />
-    <br />
+    <p align="center">
+      <a href="https://github.com/caeleno42/Completionist/graphs/contributors"><img src="https://img.shields.io/github/contributors/caeleno42/Completionist.svg" alt="Contributors Shield"></a>
+      <a href="https://github.com/caeleno42/Completionist/issues"><img src="https://img.shields.io/github/issues/caeleno42/Completionist.svg" alt="Issues Shield"></a>
+    </p>
   </p>
 </div>
 
@@ -221,7 +221,6 @@ See the [open issues](https://github.com/caeleno42/Completionist/issues) for a f
 [contributors-url]: https://github.com/caeleno42/Completionist/graphs/contributors
 [issues-shield]: https://img.shields.io/github/issues/caeleno42/Completionist.svg?style=for-the-badge
 [issues-url]: https://github.com/caeleno42/Completionist/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
 
 [JavaScript]: https://img.shields.io/badge/javascript-000000?style=for-the-badge&logo=javascript
 [JavaScript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
