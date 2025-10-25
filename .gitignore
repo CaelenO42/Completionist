@@ -211,3 +211,5 @@ __marimo__/
 .DS_Store
 .sass-cache
 oct-256.json
+google_email_creds.json
+google_email_token.json
