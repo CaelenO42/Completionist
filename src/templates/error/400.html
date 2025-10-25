@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}400{% endblock %}
+{% block style %}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/error.css') }}">
+{% endblock %}
+{% block content %}
+<section class="error">
+  <div>
+    <span>4</span>
+    <i class="fa-regular fa-circle-question"></i>
+    <i class="fa-regular fa-circle-question"></i>
+  </div>
+  <span class="desc">The browser sent a bad request. Usually this is due to navigating to the search page without specifiying a title or manually typing in an invalid Steam ID. Use the navbar above to make a new search or go back to another page!</span>
+</section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}404{% endblock %}
+{% block style %}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/error.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="error">
+  <div>
+    <span>4</span>
+    <i class="fa-regular fa-circle-question"></i>
+    <span>4</span>
+  </div>
+  <span class="desc">The page you are looking for could not be found. This could be due to a broken link or a mistyped URL. Use the bar above to navigate back to safety!</span>
+</section>
+{% endblock %}
