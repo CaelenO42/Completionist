@@ -45,3 +45,8 @@ def signin():
         return redirect(url_for("signin.signin"))
     return render_template('user/sign_in.html')
   else: return render_template('user/sign_in.html')
+
+@account_bp.route('/signout')
+def signout():
+  if 'user' in session: del session['user']
+  return redirect(url_for('home.index'))
