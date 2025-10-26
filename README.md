@@ -183,7 +183,7 @@ flask run
   - [x] Main Task View
   - [ ] Sign In / Sign Up
   - [ ] User Settings
-- [ ] Setup Flask environment
+- [x] Setup Flask environment
 - [ ] Implement pages
   - [ ] Home page
     * This page should tell the user what the app is and prompt them to create an account
@@ -198,11 +198,10 @@ flask run
   - [ ] Sign In / Sign Up
   - [ ] Edit user profile page
     * This page allows users to update their profile information
-- [ ] Database
-  - [ ] Database Conceptual Design
-  - [ ] Database Schema
-  - [ ] Setup PostgreSQL server
-- [ ]
+- [x] Database
+  - [x] Database Conceptual Design
+  - [x] Database Schema
+  - [x] Setup PostgreSQL server
 
 See the [open issues](https://github.com/caeleno42/Completionist/issues) for a full list of proposed features (and known issues).
 
