@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Onboarding{% endblock %}
+{% block style %}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/onboarding.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="onboarding">
+    {% if invalid_username %}
+    <span style="color: red;">An invalid username was provided.</span>
+    {% endif %}
+    <h1>Almost Done!</h1>
+    <p>What should we call you?</p>
+    <form method="POST">
+      <div class="field">
+        <label for="username">Username</label>
+        <label class="input-field">
+          <input type="text" name="username" placeholder="John Doe" maxlength="20">
+           <i class="fa-regular fa-user"></i>
+        </label>
+      </div>
+      <input type="submit" value="Lets Go!">
+    </form>
+</section>
+{% endblock %}

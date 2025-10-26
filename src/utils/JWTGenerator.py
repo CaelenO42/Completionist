@@ -11,7 +11,7 @@ import redis
 KEY_FILE = 'oct-256.json'
 
 class JWTGen:
-  def encode_jwt(email, uuid):
+  def encode_jwt(email, uuid=None):
     with open(KEY_FILE, 'r') as f:
       data = json.load(f)
       key_set = KeySet.import_key_set(data)
@@ -56,13 +56,14 @@ class JWTGen:
 
       claims_request = JWTClaimsRegistry(
         email={"essential": True, 'allow_blank': False},
-        uuid={"essential": True, 'allow_blank': False},
+        uuid={"essential": False, 'allow_blank': True},
         iss={"essential": True, 'allow_blank': False, 'value': "completionist"}
       )
 
       claims_request.validate(s.claims)
 
-      return claims['uuid']
+      if claims['uuid']: return {"uuid": claims['uuid']}
+      else: return {"email": claims['email']}
     except (ValueError, BadSignatureError, ExpiredTokenError, InvalidClaimError, MissingClaimError):
       return None
   

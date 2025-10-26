@@ -2,11 +2,21 @@
 {% block title %}Sign In{% endblock %}
 {% block style %}
 <script src="https://accounts.google.com/gsi/client" async></script>
-<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}">
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/sign_in.css') }}">
 {% endblock %}
 
 {% block content %}
 <section class="signin">
+  {% if invalid_email %}
+  <span style="color: red;">An invalid email was provided.</span>
+  {% endif %}
+  {% if magic_link %}
+  <span style="color: green;">A signin link has been sent to your email inbox!</span>
+  {% endif %}
+  {% if invalid_link %}
+  <span style="color: red;">Your link is invalid. Please sign in again.</span>
+  {% endif %}
+
   <!-- g_id_onload contains Google Identity Services settings -->
     <div
       id="g_id_onload"
@@ -14,9 +24,20 @@
       data-context="signin"
       data-auto_prompt="false"
       data-login_uri="http://localhost:5000/signin/"
-      data-client_id="889438295623-l0f1b0s9ima8g09e5q5r7fcggd8c9512.apps.googleusercontent.com"
+      data-client_id="754765277950-1qloaktmefi3l56md71j4cj04aoj3bdh.apps.googleusercontent.com"
     ></div>
     <!-- g_id_signin places the button on a page and supports customization -->
     <div class="g_id_signin"></div>
+
+    <form method="POST">
+      <div class="field">
+        <label for="email">Email Address</label>
+        <label class="input-field">
+          <input type="email" name="email" placeholder="example@gmail.com">
+           <i class="fa-regular fa-envelope"></i>
+        </label>
+      </div>
+      <input type="submit" value="Continue">
+    </form>
 </section>
 {% endblock %}
