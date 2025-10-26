@@ -60,8 +60,21 @@ class MailSender():
         .messages()
         .send(userId="me", body=create_message)
       ).execute()
-      print(f'Message Id: {send_message["id"]}')
+      # print(f'Message Id: {send_message["id"]}')
     except HttpError as error:
       print(f"An error occurred: {error}")
       send_message = None
     return send_message
+  
+  def verification_email(email, jwt):
+    plain_content = f"To log into Completionist, please go to the link below:\n\nhttp://localhost:5000/account/verify/{jwt}\n\nIf you did not request to sign in, you can safely ignore this message.\n\nThank you for using Completionist!"
+    rich_content = f"""
+    <h3>To log into Completionist, please follow the link below:</h3>
+    <a href="http://localhost:5000/account/verify/{jwt}">Log In</a>
+    <p>If the button above is not working, copy and paste the following link into your browser:</p>
+    <p>http://localhost:5000/account/verify/{jwt}</p>
+    <p><strong>If you did not request to sign in, you can safely ignore this message.</strong></p>
+    <p><i>Thank you for using Completionist!</i></p>
+    """
+
+    MailSender.send_mail(email, "Log In to Completionist", plain_content, rich_content)

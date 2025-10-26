@@ -9,6 +9,7 @@ from google.auth.transport import requests
 
 from src.utils.db_user import db_user
 from src.utils.JWTGenerator import JWTGen
+from src.utils.MailSender import MailSender
 
 load_dotenv()
 
@@ -49,9 +50,11 @@ def signin():
       uuid = db_user.get_uuid_by_email(email)
       jwt = JWTGen.encode_jwt(email, uuid)
       print(jwt)
+      # MailSender.verification_email(email, jwt)
     else:
       jwt = JWTGen.encode_jwt(email)
       print(jwt)
+      # MailSender.verification_email(email, jwt)
     return render_template('user/sign_in.html', magic_link=True) 
 
   else: return render_template('user/sign_in.html')
