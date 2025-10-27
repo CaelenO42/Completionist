@@ -18,16 +18,18 @@
   {% endif %}
 
   <!-- g_id_onload contains Google Identity Services settings -->
+   {% if google_oauth %}
     <div
       id="g_id_onload"
       data-ux_mode="popup"
       data-context="signin"
       data-auto_prompt="false"
       data-login_uri="http://localhost:5000/signin/"
-      data-client_id="754765277950-1qloaktmefi3l56md71j4cj04aoj3bdh.apps.googleusercontent.com"
+      data-client_id="{{ google_oauth }}"
     ></div>
     <!-- g_id_signin places the button on a page and supports customization -->
     <div class="g_id_signin"></div>
+    {% endif %}
 
     <form method="POST">
       <div class="field">

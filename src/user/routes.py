@@ -46,18 +46,21 @@ def signin():
     
     if not request.form["email"]: return render_template('user/sign_in.html', invalid_email=True) 
     email = request.form["email"].lower()
+    jwt = None
     if db_user.exists_email(email):
       uuid = db_user.get_uuid_by_email(email)
       jwt = JWTGen.encode_jwt(email, uuid)
-      print(jwt)
-      # MailSender.verification_email(email, jwt)
-    else:
-      jwt = JWTGen.encode_jwt(email)
-      print(jwt)
-      # MailSender.verification_email(email, jwt)
+    else: jwt = JWTGen.encode_jwt(email)
+
+    print(f"http://localhost:5000/account/verify/{jwt}")
+    # exists_mail = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    # if exists_mail: MailSender.verification_email(email, jwt)
+    # else: print(f"http://localhost:5000/account/verify/{jwt}")
     return render_template('user/sign_in.html', magic_link=True) 
 
-  else: return render_template('user/sign_in.html')
+  else: 
+    google_oauth = os.getenv("GOOGLE_OAUTH_KEY")
+    return render_template('user/sign_in.html', google_oauth=google_oauth)
 
 @account_bp.route('/signout')
 def signout():

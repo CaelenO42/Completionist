@@ -16,7 +16,7 @@ load_dotenv()
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 class MailSender():
-  def get_service():
+  def get_service(client_file = os.getenv("GOOGLE_OAUTH_KEY")):
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -29,7 +29,7 @@ class MailSender():
         creds.refresh(Request())
       else:
         flow = InstalledAppFlow.from_client_secrets_file(
-            "google_email_creds.json", SCOPES
+            client_file, SCOPES
         )
         creds = flow.run_local_server(port=0)
       # Save the credentials for the next run
