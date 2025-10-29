@@ -25,37 +25,37 @@
 
     <div class="form glass">
       <h5>Get started with Completionist</h5>
-        <form method="POST">
-          <div class="field">
-            <label for="email">Email</label>
-            <label class="border"><input type="email" name="email" placeholder="example@gmail.com"></label>
-          </div>
-          <input type="submit" value="Continue">
-        </form>
+      <form method="POST">
+        <div class="field">
+          <label for="email">Email</label>
+          <label class="border"><input type="email" name="email" placeholder="example@gmail.com"></label>
+        </div>
+        <input type="submit" value="Continue">
+      </form>
       <!-- g_id_onload contains Google Identity Services settings -->
       {% if google_oauth %}
       <div class="divider"><hr>alternative logins<hr></div>
-        <div
-          id="g_id_onload"
-          data-ux_mode="popup"
-          data-context="signin"
-          data-auto_prompt="false"
-          data-login_uri="https://localhost/signin/"
-          data-client_id="{{ google_oauth }}"
-        ></div>
-        <!-- g_id_signin places the button on a page and supports customization -->
-        <div class="g_id_signin"
-            data-type="standard"
-            data-shape="rectangular"
-            data-theme="outline"
-            data-text="continue_with"
-            data-size="large"
-            data-logo_alignment="left"
-            data-width="280px">
-        </div>
-        {% endif %}
+      <div
+        id="g_id_onload"
+        data-ux_mode="popup"
+        data-context="signin"
+        data-auto_prompt="false"
+        data-login_uri="https://localhost/signin/"
+        data-client_id="{{ google_oauth }}"
+      ></div>
+      <!-- g_id_signin places the button on a page and supports customization -->
+      <div class="g_id_signin"
+          data-type="standard"
+          data-shape="rectangular"
+          data-theme="outline"
+          data-text="continue_with"
+          data-size="large"
+          data-logo_alignment="left"
+          data-width="280px">
       </div>
+      {% endif %}
     </div>
+  </div>
 </section>
 {% endblock %}
 {% block footer %}

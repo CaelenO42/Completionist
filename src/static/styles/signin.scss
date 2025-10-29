@@ -117,6 +117,21 @@ h5 {
   padding: 0;
   margin: 0;
   color: var(--Text_Main);
+  text-align: center;
+}
+
+p {
+  @include regular;
+  margin: 0;
+  padding: 0;
+  color: var(--Text_Main);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
 
 .divider {
@@ -141,6 +156,8 @@ form {
   justify-content: center;
   align-items: center;
   gap: 10px;
+  position: relative;
+  z-index: 5;
 }
 
 .field {
@@ -229,7 +246,17 @@ input[type="submit"] {
   border-radius: 10px;
   border: none;
   outline: none;
+  cursor: pointer;
   background: linear-gradient(277deg, var(--Primary, #FFA64D) 1.3%, var(--Accent, #FFFF4C) 97.44%);
+}
+
+input[name="cancel"] {
+  padding: 0;
+  // background: rgb(from var(--Secondary) r g b / 0.5);
+  background: none;
+  color: var(--Text_Main);
+  padding: 5px 10px;
+  @include small;
 }
 
 div#g_id_onload {

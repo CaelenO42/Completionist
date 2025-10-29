@@ -59,6 +59,7 @@ def signin():
     return render_template('user/sign_in.html', magic_link=True) 
 
   else: 
+    if 'email' in session: return redirect(url_for("account.onboarding"))
     google_oauth = os.getenv("GOOGLE_OAUTH_KEY")
     return render_template('user/sign_in.html', google_oauth=google_oauth)
 
@@ -83,6 +84,10 @@ def verify(jwt):
 @account_bp.route('/onboarding', methods=('GET', 'POST'))
 def onboarding():
   if request.method == 'POST':
+    if 'cancel' in request.form:
+      del session['email']
+      del session['google_sub']
+      return redirect(url_for("home.index"))
     if 'email' not in session: return redirect(url_for('home.index'))
     if 'username' in request.form and len(request.form['username']) >= 1:
       email = session['email']

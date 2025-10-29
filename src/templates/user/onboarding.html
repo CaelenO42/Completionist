@@ -1,25 +1,40 @@
 {% extends 'base.html' %}
 {% block title %}Onboarding{% endblock %}
 {% block style %}
-<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/onboarding.css') }}">
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/signin.css') }}">
 {% endblock %}
-
+{% block nav %}
+{% endblock %}
 {% block content %}
-<section class="onboarding">
+<section class="signin">
+  <a class="logo" href="/">
+    <img src="{{ url_for('static', filename='img/logo_icon.svg') }}" alt="Completionist Logo">
+    Completionist
+  </a>
+  <div class="container">
     {% if invalid_username %}
-    <span style="color: red;">An invalid username was provided.</span>
+    <span class="glass error alert">An invalid username was provided.</span>
     {% endif %}
-    <h1>Almost Done!</h1>
-    <p>What should we call you?</p>
-    <form method="POST">
-      <div class="field">
-        <label for="username">Username</label>
-        <label class="input-field">
-          <input type="text" name="username" placeholder="John Doe" maxlength="20">
-           <i class="fa-regular fa-user"></i>
-        </label>
+    <div class="form glass">
+      <div class="heading">
+        <h5>Thank you for choosing Completionist!</h5>
+        <p>What should we call you?</p>
       </div>
-      <input type="submit" value="Lets Go!">
-    </form>
+      <form method="POST">
+        <div class="field">
+          <label for="username">Username</label>
+          <label class="border"><input type="text" name="username" placeholder="John Doe" maxlength="20"></label>
+        </div>
+        <input type="submit" value="Lets Go!">
+      </form>
+      <form method="POST">
+        <div class="error glass">
+          <input class="error glass" type="submit" name="cancel" value="Cancel account creation">
+        </div>
+      </form>
+    </div>
+  </div>
 </section>
+{% endblock %}
+{% block footer %}
 {% endblock %}
