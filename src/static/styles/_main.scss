@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root{
+  --Text_Main:rgba(255, 255, 255, 0.9);
+  --Text_Dim:rgba(255, 255, 255, 0.6);
+
+  --Background_Main:rgb(18, 18, 18);
+  --Background_Hover:rgba(255, 255, 255, 0.07);
+  --Background_Highlight:rgba(255, 255, 255, 0.15);
+
+  --Accent_Green:#31c950;
+  --Accent_Orange:#fe9a37;
+  --Accent_Red:#fb2c36;
+
+  --Primary:#ffa64d;
+  --Secondary:#6c1414;
+  --Accent:#ffff4c;
+
+  --font_base: 1rem;
+  --font_scale: 1.333;
+
+  --h5: calc(var(--font_base) * var(--font_scale));
+  --h4: calc(var(--h5) * var(--font_scale));
+  --h3: calc(var(--h4) * var(--font_scale));
+  --h2: calc(var(--h3) * var(--font_scale));
+  --h1: calc(var(--h2) * var(--font_scale));
+  --small: calc(var(--font_base) / var(--font_scale));
+
+  --font_family: "Inter", sans-serif;
+
+  --transition: 0.25s ease-in-out;
+}
+
+// Mixins
+
+@mixin noDrag {
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+@mixin noSelect {
+  user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+@mixin h1 {
+  font-family: var(--font_family);
+  font-weight: 700;
+  font-size: var(--h1);
+}
+
+@mixin h2 {
+  font-family: var(--font_family);
+  font-weight: 700;
+  font-size: var(--h2);
+}
+
+@mixin h3 {
+  font-family: var(--font_family);
+  font-weight: 700;
+  font-size: var(--h3);
+}
+
+@mixin h4 {
+  font-family: var(--font_family);
+  font-weight: 700;
+  font-size: var(--h4);
+}
+
+@mixin h5 {
+  font-family: var(--font_family);
+  font-weight: 700;
+  font-size: var(--h5);
+}
+
+@mixin regular {
+  font-family: var(--font_family);
+  font-weight: normal;
+  font-size: var(--font_base);
+}
+
+@mixin small {
+  font-family: var(--font_family);
+  font-weight: normal;
+  font-size: var(--small);
+}
+
+// Global Styles
+* {
+  box-sizing: border-box;
+  font-family: var(--font_family);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  overflow-y: auto;
+  scrollbar-color: var(--Text_Dim);
+  scrollbar-width: thin;
+}
+
+body {
+  background-color: var(--Background_Main);
+  height: fit-content;
+  max-height: fit-content;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  max-width: 100vw;
+  // overflow-x: hidden;
+  min-height: 100vh;
+}

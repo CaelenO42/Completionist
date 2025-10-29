@@ -2,44 +2,61 @@
 {% block title %}Sign In{% endblock %}
 {% block style %}
 <script src="https://accounts.google.com/gsi/client" async></script>
-<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/sign_in.css') }}">
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/signin.css') }}">
 {% endblock %}
-
+{% block nav %}
+{% endblock %}
 {% block content %}
 <section class="signin">
-  {% if invalid_email %}
-  <span style="color: red;">An invalid email was provided.</span>
-  {% endif %}
-  {% if magic_link %}
-  <span style="color: green;">A sign in link has been sent to your email inbox!</span>
-  {% endif %}
-  {% if invalid_link %}
-  <span style="color: red;">Your link is invalid. Please sign in again.</span>
-  {% endif %}
-
-  <!-- g_id_onload contains Google Identity Services settings -->
-   {% if google_oauth %}
-    <div
-      id="g_id_onload"
-      data-ux_mode="popup"
-      data-context="signin"
-      data-auto_prompt="false"
-      data-login_uri="http://localhost:5000/signin/"
-      data-client_id="{{ google_oauth }}"
-    ></div>
-    <!-- g_id_signin places the button on a page and supports customization -->
-    <div class="g_id_signin"></div>
+  <a class="logo" href="/">
+    <img src="{{ url_for('static', filename='img/logo_icon.svg') }}" alt="Completionist Logo">
+    Completionist
+  </a>
+  <div class="container">
+    {% if invalid_email %}
+    <span class="glass error alert">An invalid email was provided.</span>
+    {% endif %}
+    {% if magic_link %}
+    <span class="alert glass success">A sign in link has been sent to your email inbox!</span>
+    {% endif %}
+    {% if invalid_link %}
+    <span class="alert glass error">Your link is invalid. Please sign in again.</span>
     {% endif %}
 
-    <form method="POST">
-      <div class="field">
-        <label for="email">Email Address</label>
-        <label class="input-field">
-          <input type="email" name="email" placeholder="example@gmail.com">
-           <i class="fa-regular fa-envelope"></i>
-        </label>
+    <div class="form glass">
+      <h5>Get started with Completionist</h5>
+        <form method="POST">
+          <div class="field">
+            <label for="email">Email</label>
+            <label class="border"><input type="email" name="email" placeholder="example@gmail.com"></label>
+          </div>
+          <input type="submit" value="Continue">
+        </form>
+      <!-- g_id_onload contains Google Identity Services settings -->
+      {% if google_oauth %}
+      <div class="divider"><hr>alternative logins<hr></div>
+        <div
+          id="g_id_onload"
+          data-ux_mode="popup"
+          data-context="signin"
+          data-auto_prompt="false"
+          data-login_uri="https://localhost/signin/"
+          data-client_id="{{ google_oauth }}"
+        ></div>
+        <!-- g_id_signin places the button on a page and supports customization -->
+        <div class="g_id_signin"
+            data-type="standard"
+            data-shape="rectangular"
+            data-theme="outline"
+            data-text="continue_with"
+            data-size="large"
+            data-logo_alignment="left"
+            data-width="280px">
+        </div>
+        {% endif %}
       </div>
-      <input type="submit" value="Continue">
-    </form>
+    </div>
 </section>
+{% endblock %}
+{% block footer %}
 {% endblock %}
