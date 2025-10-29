@@ -181,7 +181,7 @@ flask run
 - [ ] Figma UI design
   - [ ] Home Page
   - [x] Main Task View
-  - [ ] Sign In / Sign Up
+  - [x] Sign In / Sign Up
   - [ ] User Settings
 - [x] Setup Flask environment
 - [ ] Implement pages
@@ -195,7 +195,7 @@ flask run
     - [ ] Change Task Category
     - [ ] Drag to reorder tasks
     - [ ] Filter tasks
-  - [ ] Sign In / Sign Up
+  - [x] Sign In / Sign Up
   - [ ] Edit user profile page
     * This page allows users to update their profile information
 - [x] Database
