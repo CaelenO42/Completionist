@@ -25,7 +25,17 @@
   <body>
     {% block nav %}
     <nav>
-      <p>This is the nav</p>
+      <a href="/">
+        <img src="{{ url_for('static', filename='img/logo_full.svg') }}" alt="Logo">
+      </a>
+      {% if 'user' not in session %}
+      <a class="accent" href="{{ url_for('signin.signin') }}">Sign In</a>
+      {% else %}
+      <div class="links">
+        <a class="accent" href="{{ url_for('dashboard.index') }}">Dashboard</a>
+        <a href="{{ url_for('account.signout') }}">Sign Out</a>
+      </div>
+      {% endif %}
     </nav>
     {% endblock %}
     {% block content %}

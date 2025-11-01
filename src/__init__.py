@@ -23,6 +23,10 @@ def create_app(config_class=Config):
   from src.home import bp as home_bp
   app.register_blueprint(home_bp)
 
+  # Dashboard blueprint
+  from src.dashboard import bp as dashboard_bp
+  app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
+
   # User blueprint
   from src.user import account_bp as account_bp
   from src.user import signin_bp as signin_bp

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block style %}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+  {% if session['user'] %}
+  <h1>Hello {{ session.user.username }}</h1>
+  {% endif %}
+  This is some body content
+</section>
+{% endblock %}

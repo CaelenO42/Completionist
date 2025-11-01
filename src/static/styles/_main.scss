@@ -118,4 +118,52 @@ body {
   max-width: 100vw;
   // overflow-x: hidden;
   min-height: 100vh;
+  padding: 10px;
+}
+
+nav {
+  height: fit-content;
+  background-color: var(--Background_Hover);
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 10px;
+  height: 60px;
+
+  .links {
+    display: flex;
+    gap: 5px;
+  }
+
+  a:not(:has(> img)) {
+    display: flex;
+    text-decoration: none;
+    padding: 7px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    @include regular;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: var(--Background_Hover);
+    color: var(--Text_Main);
+    transition: var(--transition) all;
+
+    &:hover {
+      background-color: var(--Background_Highlight);
+    }
+
+    &.accent {
+      background: linear-gradient(277deg, var(--Primary, #FFA64D) 1.3%, var(--Accent, #FFFF4C)) 97.44%;
+      color: var(--Background_Main);
+
+      &:hover {
+        
+      }
+    }
+  }
 }

@@ -20,21 +20,19 @@ def signin():
       try:
         idinfo = id_token.verify_oauth2_token(request.form['credential'], requests.Request(), os.getenv("GOOGLE_OAUTH_KEY"))
 
-        print(idinfo)
-
         google_sub = idinfo['sub']
         email = idinfo['email'].lower()
 
         if db_user.exists_google_sub(google_sub):
           session['user'] = db_user.get_user_from_google_sub(google_sub)
 
-          return(redirect(url_for("home.index")))
+          return(redirect(url_for("dashboard.index")))
         elif db_user.exists_email(email):
           db_user.link_google_sub(email, google_sub)
           
           session['user'] = db_user.get_user_from_google_sub(google_sub)
 
-          return(redirect(url_for("home.index")))
+          return(redirect(url_for("dashboard.index")))
         else:
           session['email'] = email
           session['google_sub'] = google_sub
@@ -70,9 +68,9 @@ def signout():
 
 @account_bp.route('/verify/<jwt>')
 def verify(jwt):
-  if not jwt: return redirect(url_for('user/sign_in.html', invalid_link=True))
+  if not jwt: return redirect(url_for('signin.signin', invalid_link=True))
   claims = JWTGen.decode_jwt(jwt)
-  if not claims: return redirect(url_for('user/sign_in.html', invalid_link=True))
+  if not claims: return redirect(url_for('signin.signin', invalid_link=True))
   if 'uuid' in claims:
     session['user'] = db_user.get_user_from_uuid(claims['uuid'])
 
