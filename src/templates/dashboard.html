@@ -10,5 +10,10 @@
   <h1>Hello {{ session.user.username }}</h1>
   {% endif %}
   This is some body content
+  <button onclick="accessSet()">Access some protected stuff</button>
 </section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/api.js')}}"></script>
+<script src="{{ url_for('static', filename='js/load_tasks.js')}}"></script>
 {% endblock %}

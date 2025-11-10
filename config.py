@@ -10,3 +10,6 @@ class Config:
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True
     SESSION_REDIS = redis.from_url('redis://localhost:6379')
+
+    JWT_COOKIE_SECURE = True
+    JWT_TOKEN_LOCATION = ["cookies"]

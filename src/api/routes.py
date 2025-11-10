@@ -1,7 +1,9 @@
-from src.api import auth_bp
+from src.api import auth_bp, task_bp
 
 from flask import render_template, request, session, redirect, url_for, make_response, jsonify, Request
 from flask_jwt_extended import jwt_required, get_jwt_identity, set_access_cookies, set_refresh_cookies, unset_jwt_cookies, create_access_token, create_refresh_token, get_jwt, get_jti, decode_token 
+
+from src.utils.db_task import db_task
 
 import redis
 
@@ -21,6 +23,23 @@ def refresh():
   if deleted_count == 0: return jsonify({"msg": "Invalid or already used refresh token."}), 401
 
   return _issue_new_tokens_and_cookies(current_user_identity, True)
+
+
+@task_bp.route('/set', methods=['POST'])
+@jwt_required()
+def set_task():
+  current_user = get_jwt_identity()
+  return(jsonify({"msg": "Request successful"}), 200)
+
+@task_bp.route('/get', methods=['POST'], defaults={'taskId': None})
+@task_bp.route('/get/<taskId>', methods=['POST'])
+@jwt_required()
+def get_task(taskId):
+  identity = get_jwt_identity()
+  if not taskId:
+    tasks = db_task.get_tasks(identity)
+    print(tasks)
+    return (jsonify(tasks), 200)
 
   
 def _issue_new_tokens_and_cookies(identity, refresh=False):

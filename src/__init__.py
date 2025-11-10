@@ -30,14 +30,16 @@ def create_app(config_class=Config):
   app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
 
   # User blueprint
-  from src.user import account_bp as account_bp
-  from src.user import signin_bp as signin_bp
+  from src.user import account_bp
+  from src.user import signin_bp
 
   app.register_blueprint(account_bp, url_prefix='/account')
   app.register_blueprint(signin_bp, url_prefix='/signin')
 
   # API blueprint
-  from src.api import auth_bp as auth_bp
+  from src.api import auth_bp
+  from src.api import task_bp
   app.register_blueprint(auth_bp, url_prefix='/api/auth')
+  app.register_blueprint(task_bp, url_prefix='/api/task')
 
   return app
