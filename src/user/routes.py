@@ -10,6 +10,7 @@ from google.auth.transport import requests
 from src.utils.db_user import db_user
 from src.utils.JWTGenerator import JWTGen
 from src.utils.MailSender import MailSender
+from src.api.routes import _issue_new_tokens_and_cookies, _remove_tokens_and_cookies
 
 from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, unset_jwt_cookies
 
@@ -35,14 +36,14 @@ def signin():
         user = db_user.get_user_from_google_sub(google_sub)
         session['user'] = user
 
-        refresh_token = create_refresh_token(identity=user["uuid"])
-        access_token = create_access_token(identity=user["uuid"])
+        # refresh_token = create_refresh_token(identity=user["uuid"])
+        # access_token = create_access_token(identity=user["uuid"])
 
-        response = redirect(url_for("dashboard.index"))
-        set_access_cookies(response, access_token)
-        set_refresh_cookies(response, refresh_token)
+        # response = redirect(url_for("dashboard.index"))
+        # set_access_cookies(response, access_token)
+        # set_refresh_cookies(response, refresh_token)
 
-        return response
+        return _issue_new_tokens_and_cookies(user["uuid"])
       except ValueError:
         print("error!")
         return redirect(url_for("signin.signin"))
@@ -70,10 +71,7 @@ def signin():
 def signout():
   if 'user' in session: 
     session.pop('user', None)
-
-    response = redirect(url_for("home.index"))
-    unset_jwt_cookies(response)
-    return response
+    return _remove_tokens_and_cookies(request)
   else: return redirect(url_for('home.index'))
 
 @account_bp.route('/verify/<jwt>')
@@ -85,14 +83,14 @@ def verify(jwt):
     user = db_user.get_user_from_uuid(claims['uuid'])
     session['user'] = user
 
-    refresh_token = create_refresh_token(identity=user["uuid"])
-    access_token = create_access_token(identity=user["uuid"])
+    # refresh_token = create_refresh_token(identity=user["uuid"])
+    # access_token = create_access_token(identity=user["uuid"])
 
-    response = redirect(url_for("dashboard.index"))
-    set_access_cookies(response, access_token)
-    set_refresh_cookies(response, refresh_token)
+    # response = redirect(url_for("dashboard.index"))
+    # set_access_cookies(response, access_token)
+    # set_refresh_cookies(response, refresh_token)
 
-    return response
+    return _issue_new_tokens_and_cookies(user["uuid"])
   elif 'email' in claims:
     session['email'] = claims['email']
     return redirect(url_for("account.onboarding"))
@@ -114,14 +112,14 @@ def onboarding():
       user = db_user.get_user_from_email(email)
       session['user'] = user
 
-      refresh_token = create_refresh_token(identity=user["uuid"])
-      access_token = create_access_token(identity=user["uuid"])
+      # refresh_token = create_refresh_token(identity=user["uuid"])
+      # access_token = create_access_token(identity=user["uuid"])
 
-      response = redirect(url_for("dashboard.index"))
-      set_access_cookies(response, access_token)
-      set_refresh_cookies(response, refresh_token)
+      # response = redirect(url_for("dashboard.index"))
+      # set_access_cookies(response, access_token)
+      # set_refresh_cookies(response, refresh_token)
 
-      return response
+      return _issue_new_tokens_and_cookies(user["uuid"])
     else: return render_template('user/onboarding.html', invalid_username = True)
   else:
     if 'email' in session: return render_template('user/onboarding.html')

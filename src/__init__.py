@@ -36,4 +36,8 @@ def create_app(config_class=Config):
   app.register_blueprint(account_bp, url_prefix='/account')
   app.register_blueprint(signin_bp, url_prefix='/signin')
 
+  # API blueprint
+  from src.api import auth_bp as auth_bp
+  app.register_blueprint(auth_bp, url_prefix='/api/auth')
+
   return app
