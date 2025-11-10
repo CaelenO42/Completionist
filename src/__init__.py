@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_session import Session
+from flask_jwt_extended import JWTManager
 
 from config import Config
 
@@ -14,6 +15,7 @@ def create_app(config_class=Config):
   app.config.from_object(config_class)
 
   server_session = Session(app)
+  jwt = JWTManager(app)
 
   # Register Pages for 400 and 404 errors
   app.register_error_handler(400, bad_request)

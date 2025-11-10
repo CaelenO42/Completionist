@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 
-from flask import render_template, request, session, redirect, url_for
+from flask import render_template, request, session, redirect, url_for, jsonify
 from src.user import account_bp, signin_bp
 
 from google.oauth2 import id_token
@@ -10,6 +10,8 @@ from google.auth.transport import requests
 from src.utils.db_user import db_user
 from src.utils.JWTGenerator import JWTGen
 from src.utils.MailSender import MailSender
+
+from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, unset_jwt_cookies
 
 load_dotenv()
 
@@ -23,21 +25,24 @@ def signin():
         google_sub = idinfo['sub']
         email = idinfo['email'].lower()
 
-        if db_user.exists_google_sub(google_sub):
-          session['user'] = db_user.get_user_from_google_sub(google_sub)
-
-          return(redirect(url_for("dashboard.index")))
-        elif db_user.exists_email(email):
-          db_user.link_google_sub(email, google_sub)
-          
-          session['user'] = db_user.get_user_from_google_sub(google_sub)
-
-          return(redirect(url_for("dashboard.index")))
-        else:
+        if db_user.exists_email(email) and not db_user.exists_google_sub(google_sub): db_user.link_google_sub(email, google_sub)
+        elif not db_user.exists_google_sub(google_sub):
           session['email'] = email
           session['google_sub'] = google_sub
 
           return(redirect(url_for("account.onboarding")))
+        
+        user = db_user.get_user_from_google_sub(google_sub)
+        session['user'] = user
+
+        refresh_token = create_refresh_token(identity=user["uuid"])
+        access_token = create_access_token(identity=user["uuid"])
+
+        response = redirect(url_for("dashboard.index"))
+        set_access_cookies(response, access_token)
+        set_refresh_cookies(response, refresh_token)
+
+        return response
       except ValueError:
         print("error!")
         return redirect(url_for("signin.signin"))
@@ -50,7 +55,7 @@ def signin():
       jwt = JWTGen.encode_jwt(email, uuid)
     else: jwt = JWTGen.encode_jwt(email)
 
-    print(f"http://localhost:5000/account/verify/{jwt}")
+    print(f"https://localhost/account/verify/{jwt}")
     # exists_mail = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
     # if exists_mail: MailSender.verification_email(email, jwt)
     # else: print(f"http://localhost:5000/account/verify/{jwt}")
@@ -63,8 +68,13 @@ def signin():
 
 @account_bp.route('/signout')
 def signout():
-  if 'user' in session: del session['user']
-  return redirect(url_for('home.index'))
+  if 'user' in session: 
+    session.pop('user', None)
+
+    response = redirect(url_for("home.index"))
+    unset_jwt_cookies(response)
+    return response
+  else: return redirect(url_for('home.index'))
 
 @account_bp.route('/verify/<jwt>')
 def verify(jwt):
@@ -72,9 +82,17 @@ def verify(jwt):
   claims = JWTGen.decode_jwt(jwt)
   if not claims: return redirect(url_for('signin.signin', invalid_link=True))
   if 'uuid' in claims:
-    session['user'] = db_user.get_user_from_uuid(claims['uuid'])
+    user = db_user.get_user_from_uuid(claims['uuid'])
+    session['user'] = user
 
-    return redirect(url_for("home.index"))
+    refresh_token = create_refresh_token(identity=user["uuid"])
+    access_token = create_access_token(identity=user["uuid"])
+
+    response = redirect(url_for("dashboard.index"))
+    set_access_cookies(response, access_token)
+    set_refresh_cookies(response, refresh_token)
+
+    return response
   elif 'email' in claims:
     session['email'] = claims['email']
     return redirect(url_for("account.onboarding"))
@@ -91,8 +109,19 @@ def onboarding():
       email = session['email']
       del session['email']
       db_user.insert_user(request.form['username'][:20], email, session.get('google_sub', None))
-      session['user'] = db_user.get_user_from_email(email)
-      return redirect(url_for("home.index"))
+      del session['google_sub']
+
+      user = db_user.get_user_from_email(email)
+      session['user'] = user
+
+      refresh_token = create_refresh_token(identity=user["uuid"])
+      access_token = create_access_token(identity=user["uuid"])
+
+      response = redirect(url_for("dashboard.index"))
+      set_access_cookies(response, access_token)
+      set_refresh_cookies(response, refresh_token)
+
+      return response
     else: return render_template('user/onboarding.html', invalid_username = True)
   else:
     if 'email' in session: return render_template('user/onboarding.html')
