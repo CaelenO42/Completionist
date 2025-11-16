@@ -12,6 +12,8 @@ from src.utils.JWTGenerator import JWTGen
 from src.utils.MailSender import MailSender
 from src.api.routes import _issue_new_tokens_and_cookies, _remove_tokens_and_cookies
 
+from time import sleep
+
 from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, unset_jwt_cookies
 
 load_dotenv()
@@ -21,6 +23,7 @@ def signin():
   if request.method == 'POST':
     if 'credential' in request.form:
       try:
+        sleep(0.001) # Fix weird clock sync bug
         idinfo = id_token.verify_oauth2_token(request.form['credential'], requests.Request(), os.getenv("GOOGLE_OAUTH_KEY"))
 
         google_sub = idinfo['sub']
