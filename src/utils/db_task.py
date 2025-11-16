@@ -17,22 +17,20 @@ class db_task:
 
   def new_task(user_uuid, task):
     with db_conn() as curr:
-      curr.execute(
-        """
+      curr.execute("""
         INSERT INTO task (
           title, 
           status, 
           user_id) 
         VALUES (%s, %s, %s)
         RETURNING uuid;
-        """, (task['title'], 'planned', user_uuid,))
+        """, (task['title'], task.get('status'), user_uuid,))
       res = curr.fetchone()
       return res[0]
 
   def set_task(user_uuid, task_uuid, task):
     with db_conn() as curr:
-      curr.execute(
-        """
+      curr.execute("""
         UPDATE task 
         SET
           title = COALESCE(%s, title), 
@@ -44,6 +42,22 @@ class db_task:
           uuid = %s AND user_id = %s;
         """, (task.get('title'), task.get('due_date'), task.get('status'), task.get('position'), task.get('category_id'), task_uuid, user_uuid,))
       
+  def delete_task(user_uuid, task_uuid):
+    with db_conn() as curr:
+      curr.execute("""
+        DELETE FROM task 
+        WHERE
+          uuid = %s AND user_id = %s;
+        """, (task_uuid, user_uuid,));
+  
+  def delete_tasks(user_uuid):
+    with db_conn() as curr:
+      curr.execute("""
+        DELETE FROM task 
+        WHERE
+          user_id = %s;
+        """, (user_uuid,));
+
   def is_task_owner(user_uuid, task_uuid):
     with db_conn() as curr:
       curr.execute("SELECT 1 FROM task WHERE uuid = %s AND user_id = %s;", (task_uuid, user_uuid))

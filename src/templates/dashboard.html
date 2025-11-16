@@ -10,7 +10,6 @@
   <h1>Hello {{ session.user.username }}</h1>
   {% endif %}
   This is some body content
-  <button onclick="testSet()">Test task setting</button>
   <input name="taskTitle" type="text" id="taskTitle">
   <select name="status" id="status">
     <option value="planned">Planned</option>
@@ -19,6 +18,9 @@
     <option value="dropped">Dropped</option>
   </select>
   <button onclick="newTask()">Create new task</button>
+  <div class="taskList">
+
+  </div>
 </section>
 {% endblock %}
 {% block scripts %}
