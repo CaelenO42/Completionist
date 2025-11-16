@@ -36,7 +36,7 @@ async function protectedApiFetch(url, options = {}, isRetry = false) {
 
   if (isRetry) {
     console.log("Refresh attempt failed on retry. Forcing log out.");
-    window.location.href = '/account/signout';
+    // window.location.href = '/account/signout';
     return;
   }
 
@@ -60,19 +60,4 @@ async function protectedApiFetch(url, options = {}, isRetry = false) {
 
   console.log("Refresh successful! Retrying original request...");
   return protectedApiFetch(url, options, true);
-}
-
-async function accessSet() {
-  try {
-    const response = await protectedApiFetch(`${API_BASE}/task/set`, {
-      method: 'POST'
-    });
-
-    const data = await response.json();
-
-    if (response.ok) console.log("Protected access successful");
-    else console.log(`Proctected access failed: ${data.msg}`);
-  } catch (err) {
-    console.error(`Operation Failed: ${err.message}`);
-  }
 }

@@ -6,8 +6,6 @@ import psycopg2
 from db_conn import db_conn
 from setup_db import setup_db
 
-ITAD_IDS_CSV_FNAME = "itad_ids.csv"
-
 def drop_database(db_name):
   """Drop the gamescout database"""
   conn = psycopg2.connect(database='postgres')

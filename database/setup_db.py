@@ -35,8 +35,8 @@ def create_schema(db_name):
     CREATE TABLE IF NOT EXISTS user_account (
       uuid UUID DEFAULT gen_random_uuid() PRIMARY KEY,
       username VARCHAR(20) NOT NULL,
-      email TEXT NOT NULL,
-      google_sub NUMERIC(21)
+      email TEXT UNIQUE NOT NULL,
+      google_sub NUMERIC(21) UNIQUE
     );
     """)
   
@@ -54,10 +54,10 @@ def create_schema(db_name):
     """
     CREATE TABLE IF NOT EXISTS task (
       uuid UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-      title TEXT,
+      title TEXT NOT NULL,
       due_date DATE,
       created_at DATE DEFAULT now(),
-      status TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'planned',
       position INT NOT NULL,
       user_id UUID NOT NULL REFERENCES user_account(uuid),
       category_id UUID REFERENCES category(uuid)
@@ -71,13 +71,49 @@ def create_schema(db_name):
   # --------------------------- Update Task Rank --------------------------- #
   curr.execute(
     """
-    CREATE OR REPLACE FUNCTION set_new_task_position()
+    CREATE OR REPLACE FUNCTION maintain_task_sequence()
     RETURNS TRIGGER AS $$
+    DECLARE
+      max_pos INT;
+      old_pos INT;
+      new_pos INT;
     BEGIN
-      SELECT COALESCE(COUNT(*), 0) + 1
+      SELECT COALESCE(MAX(position), 0) INTO max_pos
       FROM task
-      WHERE user_id = NEW.user_id
-      INTO NEW.position;
+      WHERE user_id = NEW.user_id;
+
+      IF TG_OP = 'INSERT' THEN
+        NEW.position = max_pos + 1;
+          
+      ELSIF TG_OP = 'UPDATE' AND NEW.position IS NOT NULL THEN
+        old_pos := OLD.position;
+        new_pos := NEW.position;
+
+        IF old_pos IS DISTINCT FROM new_pos THEN
+          IF new_pos < 1 OR new_pos > max_pos THEN
+            NEW.position = max_pos;
+            new_pos := max_pos;
+          END IF;
+
+          IF old_pos > new_pos THEN
+            UPDATE task
+            SET position = position + 1
+            WHERE user_id = NEW.user_id
+              AND position >= new_pos
+              AND position < old_pos
+              AND id <> NEW.id; -- Exclude the current task being updated
+
+          ELSIF old_pos < new_pos THEN
+            UPDATE task
+            SET position = position - 1
+            WHERE user_id = NEW.user_id
+              AND position > old_pos
+              AND position <= new_pos
+              AND id <> NEW.id;
+          END IF;
+        END IF;
+      END IF;
+
       RETURN NEW;
     END;
     $$ LANGUAGE plpgsql;
@@ -85,16 +121,16 @@ def create_schema(db_name):
 
   curr.execute(
     """
-    DROP TRIGGER IF EXISTS task_position_trigger 
+    DROP TRIGGER IF EXISTS maintain_task_sequence_trigger 
       ON task;
     """)
 
   curr.execute(
     """
-    CREATE TRIGGER task_position_trigger 
-      BEFORE INSERT ON task 
+    CREATE TRIGGER maintain_task_sequence_trigger 
+      BEFORE INSERT OR UPDATE OF position ON task 
       FOR EACH ROW 
-      EXECUTE FUNCTION set_new_task_position();
+      EXECUTE FUNCTION maintain_task_sequence();
     """)
 
   # Commit and close connection
