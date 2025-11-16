@@ -53,6 +53,18 @@ def get_task(taskId):
     task = db_task.get_task(identity, taskId)
     return (jsonify(task), 200)
   
+@task_bp.route('/delete', methods=['POST'], defaults={'taskId': None})
+@task_bp.route('/delete/<taskId>', methods=['POST'])
+@jwt_required()
+def delete_task(taskId):
+  identity = get_jwt_identity()
+  if not taskId:
+    db_task.delete_tasks(identity);
+    return (jsonify({"msg": f"All tasks for user {identity} deleted."}), 200)
+  else:
+    db_task.delete_task(identity, taskId)
+    return (jsonify({"msg": f"Task {taskId} for user {identity} deleted."}), 200)
+  
 def _issue_new_tokens_and_cookies(identity, refresh=False):
   new_access_token = create_access_token(identity=identity)
   new_refresh_token = create_refresh_token(identity=identity)
