@@ -9,7 +9,7 @@
     <symbol id="icon-incomplete" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32">
       <rect width="30" height="30" x="1" y="1" stroke="#fff" stroke-opacity=".15" stroke-width="2" rx="15" />
     </symbol>
-    <symbol id="icon-in-progress" width="32" height="32" fill="none" viewBox="0 0 32 32">
+    <symbol id="icon-inprogress" width="32" height="32" fill="none" viewBox="0 0 32 32">
       <rect width="32" height="32" fill="#FE9A37" rx="16" />
       <path stroke="#fff" stroke-linecap="round" stroke-opacity=".9" stroke-width="2" d="M16 11v5m.016.034 3.464 2M25 16a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
     </symbol>
@@ -35,7 +35,7 @@
     <div class="filter-section">
       <div class="header">
         <h5><i class="fa-regular fa-calendar-days"></i>Date</h5>
-        <button>Clear</button>
+        <button onclick="filterByDate(event, true)">Clear</button>
       </div>
       <div class="date-list filter-list">
         <button onclick="filterByDate(event)" data-value="today">Due Today</button>
@@ -48,7 +48,7 @@
     <div class="filter-section">
       <div class="header">
         <h5><i class="fa-regular fa-circle-check"></i>Status</h5>
-        <button>Clear</button>
+        <button onclick="filterByStatus(event, true)">Clear</button>
       </div>
       <div class="status-list filter-list">
         <button onclick="filterByStatus(event)" data-value="planned">
@@ -64,7 +64,7 @@
           Complete
         </button>
         <button onclick="filterByStatus(event)" data-value="inprogress">
-          <svg class="option-icon" width="20" height="20" viewBox="0 0 32 32"><use href="#icon-in-progress"></use></svg>
+          <svg class="option-icon" width="20" height="20" viewBox="0 0 32 32"><use href="#icon-inprogress"></use></svg>
           In Progress
         </button>
         <button onclick="filterByStatus(event)" data-value="dropped">

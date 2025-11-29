@@ -13,7 +13,7 @@ function contentFromTask(task) {
     <input name="title" type="text" class="title" value="${task.title}">
     <span class="created-date">${new Date().getFullYear() == new Date(task.created_at).getFullYear() ? new Date(task.created_at).toLocaleString("en-US", {month: 'short', day: "numeric"}) : new Date(task.created_at).toLocaleString("en-US", {month: 'numeric', 'day': "numeric", year: 'numeric'})}</span>
     <div class="due-date-container">
-      <input name="due-date" type="date" class="due-date hidden" min="${new Date().toLocaleString("en-CA", {year: 'numeric', month: '2-digit', 'day': "2-digit"})}" value="${!task.due_date ? "" : new Date(task.due_date).toLocaleString("en-CA", {year: 'numeric', month: '2-digit', 'day': '2-digit', timeZone: 'UTC'})}">
+      <input name="due-date" type="date" class="due-date hidden" value="${!task.due_date ? "" : new Date(task.due_date).toLocaleString("en-CA", {year: 'numeric', month: '2-digit', 'day': '2-digit', timeZone: 'UTC'})}">
       <button onclick="dueDateToggle(event)" class="due-date-pretty">${!task.due_date ? "None" : new Date().getFullYear() == new Date(task.due_date).getUTCFullYear() ? new Date(task.due_date).toLocaleString("en-US", {month: 'short', day: "numeric", timeZone: 'UTC'}) : new Date(task.due_date).toLocaleString("en-US", {month: 'numeric', 'day': "numeric", year: 'numeric', timeZone: 'UTC'})}</button>
     </div>
     ${createCategoryDropdown(task.category_id)}
@@ -39,8 +39,8 @@ function createStatusDropdown(currentStatus) {
               <svg class="option-icon" width="32" height="32" viewBox="0 0 32 32"><use href="#icon-incomplete"></use></svg>
               Incomplete
           </div>
-          <div class="custom-option" data-value="inprogress" data-icon-id="icon-in-progress">
-              <svg class="option-icon" width="32" height="32" viewBox="0 0 32 32"><use href="#icon-in-progress"></use></svg>
+          <div class="custom-option" data-value="inprogress" data-icon-id="icon-inprogress">
+              <svg class="option-icon" width="32" height="32" viewBox="0 0 32 32"><use href="#icon-inprogress"></use></svg>
               In Progress
           </div>
           <div class="custom-option" data-value="complete" data-icon-id="icon-complete">
@@ -111,8 +111,11 @@ function generateLayout() {
   tasks.sort((a, b) => a.position - b.position);
 
   const filteredTasks = tasks.filter(task => {
-    if (filters.category.length == 0) return true;
-    return filters.category.includes(task.category_id);
+    const isCategoryMatch = filters.category.length == 0 || filters.category.includes(task.category_id);
+    const isStatusMatch = filters.status.length == 0 || filters.status.includes(task.status);
+    const isDueDateMatch = !filters.date || isInDateRange(task.due_date, filters.date);
+
+    return isCategoryMatch && isStatusMatch && isDueDateMatch;
   })
 
   let newListContent = '';
@@ -426,7 +429,6 @@ function filterByCategory(event, clear) {
 
   let button = event.target;
   let filter = button.getAttribute("data-value") == "none" ? null : button.getAttribute("data-value");
-  console.log(filter);
   if (!filters.category.includes(filter)) {
     filters.category.push(filter);
     button.classList.add("active");
@@ -438,12 +440,106 @@ function filterByCategory(event, clear) {
   generateLayout();
 }
 
-function filterByStatus(event) {
+function filterByStatus(event, clear) {
+  if (clear) {
+    filters.status.length = 0;
+    document.querySelectorAll(".status-list.filter-list button").forEach(button => button.classList.remove("active"));
+    generateLayout();
+    return;
+  }
 
+  let button = event.target;
+  let filter = button.getAttribute("data-value");
+  if (!filters.status.includes(filter)) {
+    filters.status.push(filter);
+    button.classList.add("active");
+  } else if (filters.status.includes(filter)) {
+    filters.status.splice(filters.status.indexOf(filter), 1)
+    button.classList.remove("active");
+  }
+
+  generateLayout();
 }
 
-function filterByDate(event) {
+function filterByDate(event, clear) {
+  if (clear) {
+    filters.date = "";
+    document.querySelectorAll(".date-list.filter-list button").forEach(button => button.classList.remove("active"));
+    generateLayout();
+    return;
+  }
 
+  let button = event.target;
+  let filter = button.getAttribute("data-value");
+  document.querySelectorAll(".date-list.filter-list button").forEach(button => button.classList.remove("active"));
+  filters.date = filter;
+  button.classList.add("active");
+
+  generateLayout();
+}
+
+function isInDateRange(taskDueDate, period) {
+  if (!taskDueDate) return false;
+
+  const taskDate = new Date(taskDueDate);
+  const today = new Date();
+  taskDate.setUTCHours(0,0,0,0);
+  today.setUTCHours(0,0,0,0);
+
+  const getStartOfWeek = (date) => {
+    const d = new Date(date);
+    d.setUTCHours(0,0,0,0);
+    const day = d.getUTCDay();
+    const diff = d.getUTCDate() - day + (day == 0 ? -6 : 1);
+    d.setUTCDate(diff);
+    return d;
+  }
+
+  const getStartOfMonth = (date) => {
+    const d = new Date(date);
+    d.setUTCHours(0, 0, 0, 0);
+    d.setUTCDate(1);
+    return d;
+  };
+
+  const getStartOfYear = (date) => {
+    const d = new Date(date);
+    d.setUTCHours(0, 0, 0, 0);
+    d.setUTCMonth(0, 1);
+    return d;
+  };
+
+  console.log(taskDate);
+  console.log(today);
+
+  switch (period.toLowerCase()) {
+    case 'today':
+      return taskDate.getTime() == today.getTime();
+      
+    case 'week':
+      const startOfWeek = getStartOfWeek(today);
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setUTCDate(startOfWeek.getUTCDate() + 7);
+      return taskDate >= startOfWeek && taskDate < endOfWeek;
+
+    case 'month':
+      const startOfMonth = getStartOfMonth(today);
+      const startOfNextMonth = new Date(startOfMonth);
+      startOfNextMonth.setUTCMonth(startOfNextMonth.getUTCMonth() + 1);
+      return taskDate >= startOfMonth && taskDate < startOfNextMonth;
+
+    case 'year':
+      const startOfYear = getStartOfYear(today);
+      const startOfNextYear = new Date(startOfYear);
+      startOfNextYear.setUTCFullYear(startOfNextYear.getUTCFullYear() + 1);
+      return taskDate >= startOfYear && taskDate < startOfNextYear;
+
+    case 'past':
+      return taskDate < today;
+
+    default:
+      return false;
+  }
 }
 
 // File Load stuff
@@ -454,7 +550,6 @@ async function main() {
   generateNewTaskStatus();
   generateNewTaskCategories();
 
-  document.querySelector("input#new-due-date").setAttribute("min", new Date().toLocaleString("en-CA", {year: 'numeric', month: '2-digit', 'day': "2-digit"}));
   document.querySelector("input#new-due-date").setAttribute("value", new Date().toLocaleString("en-CA", {year: 'numeric', month: '2-digit', 'day': "2-digit"}));
 }
 
