@@ -3,12 +3,16 @@
 section {
   color: var(--Text_Main);
   width: 100%;
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .task-status-container {
   position: relative;
   width: 32px; 
   min-height: 32px;
+  display: flex;
 
   .status-button {
     width: 32px;
@@ -267,6 +271,97 @@ section {
       width: fit-content;
       min-width: 32px;
       cursor: pointer;
+    }
+  }
+}
+
+.sidebar {
+  display: flex;
+  min-width: 200px;
+  width: 30vw;
+  max-width: 400px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+
+  .filter-section {
+    display: flex;
+    padding: 7px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 10px;
+    background: var(--Background_Hover);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.10);
+
+    .header {
+      display: flex;
+      height: 25px;
+      justify-content: space-between;
+      align-items: center;
+      align-self: stretch;
+
+      h5 {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        @include h5;
+
+        i, svg {
+          width: 23px;
+        }
+      }
+
+      button {
+        background: none;
+        border: none;
+        color: var(--Text_Dim);
+        cursor: pointer;
+        transition: var(--transition) all;
+        @include small;
+
+        &:hover {
+          color: var(--Text_Main);
+        }
+      }
+    }
+
+    .filter-list {
+      display: flex;
+      gap: 5px;
+      flex-direction: column;
+
+      button {
+        background: var(--Background_Hover);
+        border-radius: 7px;
+        border: none;
+        padding: 5px;
+        width: fit-content;
+        cursor: pointer;
+        color: var(--Text_Main);
+        @include regular;
+        transition: var(--transition) all;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+
+        &:hover {
+          background: var(--Background_Highlight);
+        }
+
+        .color-swatch {
+          width: 20px;
+          height: 20px;
+          border-radius: 20px;
+          background-color: var(--category_color);
+        }
+
+        &.active {
+          background: var(--Background_Highlight);
+        }
+      }
     }
   }
 }

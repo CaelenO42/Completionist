@@ -1,5 +1,10 @@
 const tasks = [];
 const categories = [];
+const filters = {
+  category: [],
+  date: "",
+  status: []
+}
 
 function contentFromTask(task) {
   return `
@@ -69,7 +74,7 @@ function createCategoryDropdown(currentCategoryID = "none") {
       <i class="fa-solid fa-angle-down"></i>
     </button>
     <div class="category-options-list">
-      <div class="custom-option" data-value="none" data-color="aaa" style="--category_color: #aaa;">
+      <div class="custom-option" data-value="none" data-color="555" style="--category_color: #555;">
         <span class="color-swatch"></span>
         None
       </div>`;
@@ -101,11 +106,17 @@ function createCategoryDropdown(currentCategoryID = "none") {
   return categoryString;
 }
 
-function generateLayout(tasks) {
-  list = document.querySelector('div.task-list');
+function generateLayout() {
+  let list = document.querySelector('div.task-list');
   tasks.sort((a, b) => a.position - b.position);
   tasks.forEach(task => {
-    if(!list.querySelector(`[data-uuid='${task.uuid}']`)) list.innerHTML += contentFromTask(task);
+    if (filters.category.length > 0) {
+      filters.category.forEach(category => {
+        if (filters.category.indexOf(task.category_id) == -1) list.querySelector(`[data-uuid='${task.uuid}']`).remove()
+        else if(!list.querySelector(`[data-uuid='${task.uuid}']`)) list.innerHTML += contentFromTask(task);
+      })
+    }
+    else if(!list.querySelector(`[data-uuid='${task.uuid}']`)) list.innerHTML += contentFromTask(task);
   })
   addStatusListeners();
   addCategoryListeners();
@@ -126,7 +137,7 @@ async function getTasks() {
       data.forEach(task => {
         if (!_.find(tasks, task)) tasks.push(task);
       });
-      generateLayout(tasks);
+      generateLayout();
     }
     else console.log(`Proctected access failed: ${data.msg}`);
   } catch (err) {
@@ -144,7 +155,7 @@ async function getNewTask(taskId) {
 
     if (response.ok) {
       tasks.push(data);
-      generateLayout(tasks);
+      generateLayout();
     }
     else console.log(`Proctected access failed: ${data.msg}`);
   } catch (err) {
@@ -353,6 +364,7 @@ function regenerateCategories() {
     container.replaceWith(newElement);
   })
 
+  generateCategoryFilters();
   addCategoryListeners();
 }
 
@@ -384,9 +396,62 @@ document.querySelector("dialog #confirmBtn").addEventListener("click", (e) => {
   document.querySelector("dialog").close("create");
 });
 
+// Category Filter Stuff
+function generateCategoryFilters() {
+  let filterContainer = document.querySelector(".category-list.filter-list");
+
+  let filterButtons = `
+  <button onclick='filterByCategory(event)' data-value='none'>
+    <span class="color-swatch" style="--category_color: #555;"></span>
+    None
+  </button>`;
+
+  categories.forEach(category => {
+    filterButtons += `
+    <button onclick='filterByCategory(event)' data-value='${category.uuid}'>
+      <span class="color-swatch" style="--category_color: #${category.color};"></span>
+      ${category.name}
+    </button>`;
+  })
+
+  filterContainer.innerHTML = filterButtons;
+}
+
+// Filtering Logic
+function filterByCategory(event, clear) {
+  if (clear) {
+    filters.category.length = 0;
+    document.querySelectorAll(".category-list.filter-list button").forEach(button => button.classList.remove("active"));
+    generateLayout();
+    return;
+  }
+
+  let button = event.target;
+  let filter = button.getAttribute("data-value") == "none" ? null : button.getAttribute("data-value");
+  console.log(filter);
+  if (!filters.category.includes(filter)) {
+    filters.category.push(filter);
+    button.classList.add("active");
+  } else if (filters.category.includes(filter)) {
+    filters.category.splice(filters.category.indexOf(filter), 1)
+    button.classList.remove("active");
+  }
+
+  generateLayout();
+}
+
+function filterByStatus(event) {
+
+}
+
+function filterByDate(event) {
+
+}
+
 // File Load stuff
 async function main() {
   await getCategories();
+  generateCategoryFilters();
   getTasks();
   generateNewTaskStatus();
   generateNewTaskCategories();

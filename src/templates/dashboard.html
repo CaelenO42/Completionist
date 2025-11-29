@@ -22,6 +22,58 @@
       <path stroke="#fff" stroke-linecap="round" stroke-opacity=".9" stroke-width="2" d="m10 10 11.907 12m-11.814 0L22 10" />
     </symbol>
   </svg>
+  <div class="sidebar">
+    <div class="filter-section">
+      <div class="header">
+        <h5><i class="fa-solid fa-layer-group"></i>Category</h5>
+        <button onclick="filterByCategory(event, true)">Clear</button>
+      </div>
+      <div class="category-list filter-list">
+
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="header">
+        <h5><i class="fa-regular fa-calendar-days"></i>Date</h5>
+        <button>Clear</button>
+      </div>
+      <div class="date-list filter-list">
+        <button onclick="filterByDate(event)" data-value="today">Due Today</button>
+        <button onclick="filterByDate(event)" data-value="week">Due This Week</button>
+        <button onclick="filterByDate(event)" data-value="month">Due This Month</button>
+        <button onclick="filterByDate(event)" data-value="year">Due This Year</button>
+        <button onclick="filterByDate(event)" data-value="past">Past Due</button>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="header">
+        <h5><i class="fa-regular fa-circle-check"></i>Status</h5>
+        <button>Clear</button>
+      </div>
+      <div class="status-list filter-list">
+        <button onclick="filterByStatus(event)" data-value="planned">
+          <svg class="option-icon" width="20" height="20" viewBox="0 0 32 32"><use href="#icon-planned"></use></svg>
+          Planned
+        </button>
+        <button onclick="filterByStatus(event)" data-value="incomplete">
+          <svg class="option-icon" width="20" height="20" viewBox="0 0 32 32"><use href="#icon-incomplete"></use></svg>
+          Incomplete
+        </button>
+        <button onclick="filterByStatus(event)" data-value="complete">
+          <svg class="option-icon" width="20" height="20" viewBox="0 0 32 32"><use href="#icon-complete"></use></svg>
+          Complete
+        </button>
+        <button onclick="filterByStatus(event)" data-value="inprogress">
+          <svg class="option-icon" width="20" height="20" viewBox="0 0 32 32"><use href="#icon-in-progress"></use></svg>
+          In Progress
+        </button>
+        <button onclick="filterByStatus(event)" data-value="dropped">
+          <svg class="option-icon" width="20" height="20" viewBox="0 0 32 32"><use href="#icon-dropped"></use></svg>
+          Dropped
+        </button>
+      </div>
+    </div>
+  </div>
   <div class="task-list-container">
     <div class="task-header">
       <!-- <span class="status">✅</span> -->
