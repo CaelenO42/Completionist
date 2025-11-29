@@ -67,7 +67,7 @@ function createCategoryDropdown(currentCategoryID = "none") {
   let currentCategory = categories.find(category => category.uuid === currentCategoryID);
   let categoryString = `
   <div class="task-category-container" data-category="${currentCategory ? currentCategory.uuid : "none"}">
-    <button class="category-button" tabindex="0">
+    <button class="category-button" tabindex="0" style="--category_color: #${currentCategory ? currentCategory.color : "555"};">
       <div class="inner">
         ${currentCategory ? currentCategory.name : "None"}
       </div>
@@ -118,8 +118,6 @@ function generateLayout() {
     }
     else if(!list.querySelector(`[data-uuid='${task.uuid}']`)) list.innerHTML += contentFromTask(task);
   })
-  addStatusListeners();
-  addCategoryListeners();
   document.querySelectorAll(".task-container").forEach(container => container.addEventListener("focusout", (e) => inputChanged(e, container)));
   document.querySelectorAll("input.due-date").forEach(input => input.addEventListener("focusout", (e) => dueDateToggle(e, true)));
 }
@@ -365,7 +363,6 @@ function regenerateCategories() {
   })
 
   generateCategoryFilters();
-  addCategoryListeners();
 }
 
 // New Category Modal Stuff
