@@ -1,9 +1,10 @@
-from src.api import auth_bp, task_bp
+from src.api import auth_bp, task_bp, category_bp
 
 from flask import render_template, request, session, redirect, url_for, make_response, jsonify, Request
 from flask_jwt_extended import jwt_required, get_jwt_identity, set_access_cookies, set_refresh_cookies, unset_jwt_cookies, create_access_token, create_refresh_token, get_jwt, get_jti, decode_token 
 
 from src.utils.db_task import db_task
+from src.utils.db_category import db_category
 
 import redis
 
@@ -35,8 +36,6 @@ def new_task():
 @jwt_required()
 def set_task(taskId):
   current_user = get_jwt_identity()
-  print(current_user)
-  print(db_task.is_task_owner(current_user, taskId))
   if not taskId or not db_task.is_task_owner(current_user, taskId): return(jsonify({"msg": "Invalid or missing taskId"}), 400)
   db_task.set_task(current_user, taskId, request.json)
   return(jsonify({"msg": f"Successfully updated task with id: {taskId}"}), 200)
@@ -65,6 +64,34 @@ def delete_task(taskId):
     db_task.delete_task(identity, taskId)
     return (jsonify({"msg": f"Task {taskId} for user {identity} deleted."}), 200)
   
+@category_bp.route('/new', methods=['POST'])
+@jwt_required()
+def new_category():
+  current_user = get_jwt_identity()
+  category = db_category.new_category(current_user, request.json)
+  if category: return (jsonify(category), 200)
+  else: return (jsonify({"msg": "An error has occured."}), 500)
+
+@category_bp.route('/get', methods=['POST'], defaults={'categoryId': None})
+@category_bp.route('/get/<categoryId>', methods=['POST'])
+@jwt_required()
+def get_task(categoryId):
+  identity = get_jwt_identity()
+  if not categoryId:
+    categories = db_category.get_categories(identity)
+    return (jsonify(categories), 200)
+  else:
+    category = db_category.get_category(identity, categoryId)
+    return (jsonify(category), 200)
+  
+@category_bp.route('/set/<categoryId>', methods=['POST'])
+@jwt_required()
+def set_task(categoryId):
+  current_user = get_jwt_identity()
+  if not categoryId or not db_category.is_category_owner(current_user, categoryId): return(jsonify({"msg": "Invalid or missing taskId"}), 400)
+  db_category.set_category(current_user, categoryId, request.json)
+  return(jsonify({"msg": f"Successfully updated category with id: {categoryId}"}), 200)
+
 def _issue_new_tokens_and_cookies(identity, refresh=False):
   new_access_token = create_access_token(identity=identity)
   new_refresh_token = create_refresh_token(identity=identity)

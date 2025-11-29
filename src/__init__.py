@@ -39,7 +39,9 @@ def create_app(config_class=Config):
   # API blueprint
   from src.api import auth_bp
   from src.api import task_bp
+  from src.api import category_bp
   app.register_blueprint(auth_bp, url_prefix='/api/auth')
   app.register_blueprint(task_bp, url_prefix='/api/task')
+  app.register_blueprint(category_bp, url_prefix='/api/category')
 
   return app

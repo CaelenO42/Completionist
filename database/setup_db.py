@@ -45,6 +45,7 @@ def create_schema(db_name):
     CREATE TABLE IF NOT EXISTS category (
       uuid UUID DEFAULT gen_random_uuid() PRIMARY KEY,
       name TEXT NOT NULL,
+      color TEXT NOT NULL,
       user_id UUID NOT NULL REFERENCES user_account(uuid)
     );
     """

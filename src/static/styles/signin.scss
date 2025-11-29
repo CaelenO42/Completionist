@@ -57,41 +57,6 @@ a.logo {
   @include small;
 }
 
-.glass {
-  --border-color: 255, 255, 255;
-  border-radius: 20px;
-  background: rgba(var(--border-color), 0.07);
-  position: relative;
-  overflow: hidden;
-  z-index: 0;
-  backdrop-filter: blur(2.5px);
-
-  &::before {
-    content: "";
-    position: absolute;
-    z-index: 0;
-    padding: 1px;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    border-radius: 20px;
-    background: linear-gradient(135deg, rgba(var(--border-color), .5) 0%, rgba(var(--border-color), .3) 11%, rgba(var(--border-color), .1) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-
-  &.error {
-    --border-color: 251, 44, 54;
-  }
-  
-  &.success {
-    --border-color: 49, 201, 80;
-  }
-}
-
 .container {
   display: flex;
   flex-direction: column;

@@ -1,29 +1,74 @@
-{% extends 'base.html' %}
-{% block title %}Home{% endblock %}
-{% block style %}
-<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
-{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Home{% endblock %} {% block style %}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}" />
+{% endblock %} {% block content %}
 <section class="dashboard">
-  {% if session['user'] %}
-  <h1>Hello {{ session.user.username }}</h1>
-  {% endif %}
-  This is some body content
-  <input name="taskTitle" type="text" id="taskTitle">
-  <select name="status" id="status">
-    <option value="planned">Planned</option>
-    <option value="completed">Completed</option>
-    <option value="inprogress">In Progress</option>
-    <option value="dropped">Dropped</option>
-  </select>
-  <button onclick="newTask()">Create new task</button>
-  <div class="taskList">
-
+  <svg style="display: none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-planned" width="32" height="32" fill="none" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" r="15" stroke="#fff" stroke-dasharray="3.927 3.927" stroke-linecap="round" stroke-opacity=".15" stroke-width="2" />
+    </symbol>
+    <symbol id="icon-incomplete" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32">
+      <rect width="30" height="30" x="1" y="1" stroke="#fff" stroke-opacity=".15" stroke-width="2" rx="15" />
+    </symbol>
+    <symbol id="icon-in-progress" width="32" height="32" fill="none" viewBox="0 0 32 32">
+      <rect width="32" height="32" fill="#FE9A37" rx="16" />
+      <path stroke="#fff" stroke-linecap="round" stroke-opacity=".9" stroke-width="2" d="M16 11v5m.016.034 3.464 2M25 16a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </symbol>
+    <symbol id="icon-complete" width="32" height="32" fill="none" viewBox="0 0 32 32">
+      <rect width="32" height="32" fill="#31C950" rx="16" />
+      <path stroke="#fff" stroke-linecap="round" stroke-opacity=".9" stroke-width="2" d="M13.95 22.287 22.556 10M9 17.33l4.95 4.95" />
+    </symbol>
+    <symbol id="icon-dropped" width="32" height="32" fill="none" viewBox="0 0 32 32">
+      <rect width="32" height="32" fill="#FB2C36" rx="16" />
+      <path stroke="#fff" stroke-linecap="round" stroke-opacity=".9" stroke-width="2" d="m10 10 11.907 12m-11.814 0L22 10" />
+    </symbol>
+  </svg>
+  <div class="task-list-container">
+    <div class="task-header">
+      <!-- <span class="status">✅</span> -->
+      <span class="title">Task Name</span>
+      <span class="due-date-container">Due Date</span>
+      <span class="created-date">Date Created</span>
+      <span class="category">Category</span>
+      <!-- <span class="menu">Menu</span> -->
+    </div>
+    <div class="task-list"></div>
+    <div class="new-task">
+      <div class="input hidden">
+        <div class="task-status-container" data-status="incomplete">
+        </div>
+        <input name="new-task-title" type="text" id="new-task-title" placeholder="Do something..."/>
+        <input name="new-due-date" type="date" id="new-due-date">
+        <div class="task-category-container" data-category="none">
+        </div>
+        <div class="buttons">
+          <button class="cancel glass error" onclick="taskToggle(true)"><i class="fa-solid fa-x"></i></button>
+          <button class="create glass success" onclick="addNewTask()"><i class="fa-solid fa-check"></i></button>
+        </div>
+      </div>
+      <button class="new" onclick="taskToggle(false)"><i class="fa-solid fa-plus"></i>Create New Task</button>
+    </div>
   </div>
 </section>
-{% endblock %}
-{% block scripts %}
+<dialog class="category">
+  <h4>Create a new category</h4>
+  <form>
+    <label for="category-name">Category Name</label>
+    <input type="text" id="category-name" name="category-name" placeholder="Personal">
+    <p>Color</p>
+    <input type="radio" id="red" value="82181A" name="category_color">
+    <input type="radio" id="green" value="0D542B" name="category_color">
+    <input type="radio" id="blue" value="024A70" name="category_color">
+    <input type="radio" id="purple" value="59168B" name="category_color">
+    <div class="buttons">
+      <button value="cancel" formmethod="dialog">Cancel</button>
+      <button id="confirmBtn" value="default">Create</button>
+    </div>
+  </form>
+</dialog>
+{% endblock %} {% block scripts %}
+<script src=" https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js "></script>
 <script src="{{ url_for('static', filename='js/api.js')}}"></script>
-<script src="{{ url_for('static', filename='js/load_tasks.js')}}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js')}}"></script>
+<script src="{{ url_for('static', filename='js/custom_category_select.js')}}"></script>
+<script src="{{ url_for('static', filename='js/custom_task_select.js')}}"></script>
 {% endblock %}

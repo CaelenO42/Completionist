@@ -21,10 +21,12 @@ class db_task:
         INSERT INTO task (
           title, 
           status, 
+          due_date,
+          category_id,
           user_id) 
-        VALUES (%s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s)
         RETURNING uuid;
-        """, (task['title'], task.get('status'), user_uuid,))
+        """, (task.get('title'), task.get('status'), task.get('due_date'), task.get('category_id'), user_uuid,))
       res = curr.fetchone()
       return res[0]
 
@@ -33,11 +35,11 @@ class db_task:
       curr.execute("""
         UPDATE task 
         SET
-          title = COALESCE(%s, title), 
-          due_date = COALESCE(%s, due_date),
-          status = COALESCE(%s, status), 
-          position = COALESCE(%s, position),
-          category_id = COALESCE(%s, category_id)
+          title = %s, 
+          due_date = %s,
+          status = %s, 
+          position = COALESCE(NULLIF(%s, '')::int, position),
+          category_id = %s
         WHERE
           uuid = %s AND user_id = %s;
         """, (task.get('title'), task.get('due_date'), task.get('status'), task.get('position'), task.get('category_id'), task_uuid, user_uuid,))
