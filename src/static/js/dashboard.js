@@ -109,15 +109,16 @@ function createCategoryDropdown(currentCategoryID = "none") {
 function generateLayout() {
   let list = document.querySelector('div.task-list');
   tasks.sort((a, b) => a.position - b.position);
-  tasks.forEach(task => {
-    if (filters.category.length > 0) {
-      filters.category.forEach(category => {
-        if (filters.category.indexOf(task.category_id) == -1) list.querySelector(`[data-uuid='${task.uuid}']`).remove()
-        else if(!list.querySelector(`[data-uuid='${task.uuid}']`)) list.innerHTML += contentFromTask(task);
-      })
-    }
-    else if(!list.querySelector(`[data-uuid='${task.uuid}']`)) list.innerHTML += contentFromTask(task);
+
+  const filteredTasks = tasks.filter(task => {
+    if (filters.category.length == 0) return true;
+    return filters.category.includes(task.category_id);
   })
+
+  let newListContent = '';
+  filteredTasks.forEach(task => newListContent += contentFromTask(task));
+  list.innerHTML = newListContent;
+
   document.querySelectorAll(".task-container").forEach(container => container.addEventListener("focusout", (e) => inputChanged(e, container)));
   document.querySelectorAll("input.due-date").forEach(input => input.addEventListener("focusout", (e) => dueDateToggle(e, true)));
 }
