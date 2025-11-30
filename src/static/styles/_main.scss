@@ -216,7 +216,7 @@ nav {
     mask-composite: exclude;
   }
 
-  &:hover {
+  &.error:hover, &.success:hover {
     background: rgba(var(--border-color), 0.2);
   }
 

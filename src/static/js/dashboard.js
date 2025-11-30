@@ -7,14 +7,33 @@ const filters = {
 }
 
 function contentFromTask(task) {
+  const dueDate = new Date(task.due_date);
+  const today = new Date();
+  const oneYearAhead = new Date(today.setUTCFullYear(today.getUTCFullYear() + 1));
+  const isMoreThanAYearAhead = dueDate.getTime() > oneYearAhead.getTime();
+
   return `
   <div class="task-container" data-uuid="${task.uuid}" data-position="${task.position}">
     ${createStatusDropdown(task.status)}
     <input name="title" type="text" class="title" value="${task.title}">
-    <span class="created-date">${new Date().getFullYear() == new Date(task.created_at).getFullYear() ? new Date(task.created_at).toLocaleString("en-US", {month: 'short', day: "numeric"}) : new Date(task.created_at).toLocaleString("en-US", {month: 'numeric', 'day': "numeric", year: 'numeric'})}</span>
+    <span class="created-date">
+      ${
+        new Date().getFullYear() == new Date(task.created_at).getFullYear() ? 
+        new Date(task.created_at).toLocaleString("en-US", {month: 'short', day: "numeric"}) : 
+        new Date(task.created_at).toLocaleString("en-US", {month: 'numeric', 'day': "numeric", year: 'numeric'})
+      }
+    </span>
     <div class="due-date-container">
       <input name="due-date" type="date" class="due-date hidden" value="${!task.due_date ? "" : new Date(task.due_date).toLocaleString("en-CA", {year: 'numeric', month: '2-digit', 'day': '2-digit', timeZone: 'UTC'})}">
-      <button onclick="dueDateToggle(event)" class="due-date-pretty">${!task.due_date ? "None" : new Date().getFullYear() == new Date(task.due_date).getUTCFullYear() ? new Date(task.due_date).toLocaleString("en-US", {month: 'short', day: "numeric", timeZone: 'UTC'}) : new Date(task.due_date).toLocaleString("en-US", {month: 'numeric', 'day': "numeric", year: 'numeric', timeZone: 'UTC'})}</button>
+      <button onclick="dueDateToggle(event)" class="due-date-pretty">
+        ${
+          !task.due_date ? 
+          "None" : 
+          isMoreThanAYearAhead ? 
+            dueDate.toLocaleString("en-US", {month: '2-digit', 'day': "2-digit", year: 'numeric', timeZone: 'UTC'}) :
+            dueDate.toLocaleString("en-US", {month: 'short', day: "numeric", timeZone: 'UTC'})
+        }
+      </button>
     </div>
     ${createCategoryDropdown(task.category_id)}
     <button class="delete glass error" onclick="deleteTask('${task.uuid}')"><i class="fa-regular fa-trash-can"></i></button>
@@ -270,8 +289,18 @@ async function newCategory(category_data) {
 function dueDateToggle(event, doClose) {
   let input = event.target.parentElement.querySelector("input.due-date");
   let button = event.target.parentElement.querySelector("button.due-date-pretty");
+
+  const dueDate = new Date(input.value);
+  const today = new Date();
+  const oneYearAhead = new Date(today.setUTCFullYear(today.getUTCFullYear() + 1));
+  const isMoreThanAYearAhead = dueDate.getTime() > oneYearAhead.getTime();
+
   if (doClose) {
-    button.innerHTML = new Date().getFullYear() == new Date(input.value).getUTCFullYear() ? new Date(input.value).toLocaleString("en-US", {month: 'short', day: "numeric", timeZone: 'UTC'}) : new Date(input.value).toLocaleString("en-US", {month: 'numeric', 'day': "numeric", year: 'numeric', timeZone: 'UTC'})
+    button.innerHTML = !input.value ? 
+                        "None" : 
+                        isMoreThanAYearAhead ? 
+                          dueDate.toLocaleString("en-US", {month: '2-digit', 'day': "2-digit", year: 'numeric', timeZone: 'UTC'}) :
+                          dueDate.toLocaleString("en-US", {month: 'short', day: "numeric", timeZone: 'UTC'})
     input.classList.add("hidden");
     button.classList.remove("hidden");
   } else {
@@ -299,7 +328,8 @@ function newTaskClear() {
   generateNewTaskStatus();
   generateNewTaskCategories();
   
-  document.querySelector("input#new-due-date").value = new Date().toLocaleString("en-CA", {year: 'numeric', month: '2-digit', 'day': "2-digit"});
+  document.querySelector("input#new-due-date").value = "";
+  // document.querySelector("input#new-due-date").value = new Date().toLocaleString("en-CA", {year: 'numeric', month: '2-digit', 'day': "2-digit"});
 }
 
 function addNewTask() {
@@ -322,9 +352,11 @@ function inputChanged(e, container) {
 
   let data = {
     title: container.querySelector("input.title").value,
-    status: container.querySelector("select[name='task-status']").value,
+    status: container.querySelector(".task-status-container").getAttribute("data-status"),
     due_date: container.querySelector("input.due-date").value,
-    category_id: container.querySelector("select[name='task-category']").value == "none" ? null : container.querySelector("select[name='task-category']").value
+    category_id: container.querySelector(".task-category-container").getAttribute("data-category") == "none" ? 
+      null : 
+      container.querySelector(".task-category-container").getAttribute("data-category")
   }
   if(!_.find(tasks, {uuid: taskId, status: data.status, title: data.title, due_date: new Date(data.due_date).toUTCString(), category_id: data.category_id})) setTask(taskId, data);
 }
@@ -550,7 +582,8 @@ async function main() {
   generateNewTaskStatus();
   generateNewTaskCategories();
 
-  document.querySelector("input#new-due-date").setAttribute("value", new Date().toLocaleString("en-CA", {year: 'numeric', month: '2-digit', 'day': "2-digit"}));
+  document.querySelector(".new-task .created-date").innerHTML = new Date().toLocaleString("en-US", {month: 'short', day: "numeric"});
+  // document.querySelector("input#new-due-date").setAttribute("value", new Date().toLocaleString("en-CA", {year: 'numeric', month: '2-digit', 'day': "2-digit"}));
 }
 
 main();

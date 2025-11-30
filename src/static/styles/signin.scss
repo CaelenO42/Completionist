@@ -54,7 +54,7 @@ a.logo {
   justify-content: center;
   align-items: flex-start;
   color: var(--Text_Main);
-  @include small;
+  @include regular;
 }
 
 .container {

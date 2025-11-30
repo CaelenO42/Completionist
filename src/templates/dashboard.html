@@ -76,11 +76,11 @@
   </div>
   <div class="task-list-container">
     <div class="task-header">
-      <!-- <span class="status">✅</span> -->
-      <span class="title">Task Name</span>
-      <span class="due-date-container">Due Date</span>
-      <span class="created-date">Date Created</span>
-      <span class="category">Category</span>
+      <span></span>
+      <span>Task Name</span>
+      <span>Date Created</span>
+      <span>Due Date</span>
+      <span>Category</span>
       <!-- <span class="menu">Menu</span> -->
     </div>
     <div class="task-list"></div>
@@ -88,7 +88,8 @@
       <div class="input hidden">
         <div class="task-status-container" data-status="incomplete">
         </div>
-        <input name="new-task-title" type="text" id="new-task-title" placeholder="Do something..."/>
+        <input class="title" name="new-task-title" type="text" id="new-task-title" placeholder="Do something..."/>
+        <span class="created-date"></span>
         <input name="new-due-date" type="date" id="new-due-date">
         <div class="task-category-container" data-category="none">
         </div>
@@ -101,19 +102,27 @@
     </div>
   </div>
 </section>
-<dialog class="category">
+<dialog class="category glass">
   <h4>Create a new category</h4>
   <form>
-    <label for="category-name">Category Name</label>
-    <input type="text" id="category-name" name="category-name" placeholder="Personal">
-    <p>Color</p>
-    <input type="radio" id="red" value="82181A" name="category_color">
-    <input type="radio" id="green" value="0D542B" name="category_color">
-    <input type="radio" id="blue" value="024A70" name="category_color">
-    <input type="radio" id="purple" value="59168B" name="category_color">
+    <div class="field">
+      <label for="category-name">Category Name</label>
+      <label class="border"><input type="text" id="category-name" name="category-name" placeholder="Personal"></label>
+    </div>
+    <div class="field">
+      <label for>Color</label>
+      <label class="border">
+        <div class="pad">
+          <label><input type="radio" id="red" value="82181A" name="category_color"></label>
+          <label><input type="radio" id="green" value="0D542B" name="category_color"></label>
+          <label><input type="radio" id="blue" value="024A70" name="category_color"></label>
+          <label><input type="radio" id="purple" value="59168B" name="category_color"></label>
+        </div>
+      </label>
+    </div>
     <div class="buttons">
-      <button value="cancel" formmethod="dialog">Cancel</button>
-      <button id="confirmBtn" value="default">Create</button>
+      <button class="glass error" value="cancel" formmethod="dialog">Cancel</button>
+      <button class="glass success" id="confirmBtn" value="default">Create</button>
     </div>
   </form>
 </dialog>

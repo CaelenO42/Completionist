@@ -16,6 +16,9 @@ class db_task:
       return res
 
   def new_task(user_uuid, task):
+    due_date = task.get('due_date')
+    if not due_date: due_date = None
+
     with db_conn() as curr:
       curr.execute("""
         INSERT INTO task (
@@ -26,7 +29,7 @@ class db_task:
           user_id) 
         VALUES (%s, %s, %s, %s, %s)
         RETURNING uuid;
-        """, (task.get('title'), task.get('status'), task.get('due_date'), task.get('category_id'), user_uuid,))
+        """, (task.get('title'), task.get('status'), due_date, task.get('category_id'), user_uuid,))
       res = curr.fetchone()
       return res[0]
 
@@ -36,7 +39,7 @@ class db_task:
         UPDATE task 
         SET
           title = %s, 
-          due_date = %s,
+          due_date = NULLIF(%s, '')::date,
           status = %s, 
           position = COALESCE(NULLIF(%s, '')::int, position),
           category_id = %s
