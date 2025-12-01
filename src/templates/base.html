@@ -14,34 +14,25 @@
     <!-- Favicon -->
     <link rel="icon" href="{{ url_for('static', filename='img/logo_icon.svg') }}" />
     <!-- Script / Style References -->
-    <script
-    src="https://code.jquery.com/jquery-3.7.1.min.js"
-    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-    crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/56b07f00c9.js" crossorigin="anonymous"></script>
-    {% block style %}
-    {% endblock %}
+    {% block style %} {% endblock %}
   </head>
   <body>
     {% block nav %}
     <nav>
       <a href="/">
-        <img src="{{ url_for('static', filename='img/logo_full.svg') }}" alt="Logo">
+        <img src="{{ url_for('static', filename='img/logo_full.svg') }}" alt="Logo" />
       </a>
       {% if 'user' not in session %}
       <a class="accent" href="{{ url_for('signin.signin') }}">Sign In</a>
       {% else %}
       <div class="links">
-        <a class="user" href="{{ url_for('dashboard.index') }}">{{ session.user.username }}</a>
-        <a class="signout" href="{{ url_for('account.signout') }}"><i class="fa-solid fa-arrow-right-from-bracket"></i>Sign Out</a>
+        <a class="user glass" href="{{ url_for('dashboard.index') }}">{{ session.user.username }}</a>
+        <a class="signout glass" href="{{ url_for('account.signout') }}"><i class="fa-solid fa-arrow-right-from-bracket"></i>Sign Out</a>
       </div>
       {% endif %}
     </nav>
-    {% endblock %}
-    {% block content %}
-    {% endblock %}
-    {% block scripts %}
-    {% endblock %}
+    {% endblock %} {% block content %} {% endblock %} {% block scripts %} {% endblock %}
   </body>
 </html>
-

@@ -1,11 +1,18 @@
-{% extends 'base.html' %}
-{% block title %}Home{% endblock %}
-{% block style %}
-<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}">
-{% endblock %}
-
-{% block content %}
-<section class="home">
-  <h1>Completionist Home Page</h1>
+{% extends 'base.html' %} {% block title %}Home{% endblock %} {% block style %}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}" />
+{% endblock %} {% block content %}
+<section class="home glass">
+  <h1>Get your tasks <span>done</span></h1>
+  <div>
+    <p>Completionist is your new all in one task management application</p>
+    <p>
+      Built on <span>Flask</span>, <span>PostgreSQL</span>, and <span>Redis</span> it makes it easy to sign up, and get started keeping track of your tasks!
+    </p>
+  </div>
+  {% if 'user' not in session %}
+  <a href="{{ url_for('signin.signin') }}">Sign Up Now!</a>
+  {% else %}
+  <a href="{{ url_for('dashboard.index') }}">Go to My Dashboard</a>
+  {% endif %}
 </section>
 {% endblock %}
