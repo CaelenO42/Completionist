@@ -192,7 +192,7 @@ section {
 
   .task-header {
     display: grid;
-    grid-template-columns: 32px 1fr 110px 160px 100px 74px;
+    grid-template-columns: 32px 1fr 110px 160px 120px 74px;
     gap: 10px;
     width: 100%;
     padding: 0 8px;
@@ -297,7 +297,7 @@ section {
 
   .task-container, .input {
     display: grid;
-    grid-template-columns: 32px 1fr 110px 160px 100px 74px;
+    grid-template-columns: 32px 1fr 110px 160px 120px 74px;
     width: 100%;
     grid-template-areas: "status title date_created due_date category menu";
     height: calc(32px + (8px * 2));
