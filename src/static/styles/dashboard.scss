@@ -129,6 +129,7 @@ section {
       background-color: transparent;
       align-items: center;
       transition: var(--transition) all;
+      text-wrap: nowrap;
 
       &:hover {
         background-color: var(--Background_Hover);
@@ -153,6 +154,7 @@ section {
       color: var(--Text_Main);
       border: none;
       @include regular;
+      text-wrap: nowrap;
 
       i, svg {
         @include small;

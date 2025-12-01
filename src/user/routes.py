@@ -39,13 +39,6 @@ def signin():
         user = db_user.get_user_from_google_sub(google_sub)
         session['user'] = user
 
-        # refresh_token = create_refresh_token(identity=user["uuid"])
-        # access_token = create_access_token(identity=user["uuid"])
-
-        # response = redirect(url_for("dashboard.index"))
-        # set_access_cookies(response, access_token)
-        # set_refresh_cookies(response, refresh_token)
-
         return _issue_new_tokens_and_cookies(user["uuid"])
       except ValueError:
         print("error!")
@@ -86,13 +79,6 @@ def verify(jwt):
     user = db_user.get_user_from_uuid(claims['uuid'])
     session['user'] = user
 
-    # refresh_token = create_refresh_token(identity=user["uuid"])
-    # access_token = create_access_token(identity=user["uuid"])
-
-    # response = redirect(url_for("dashboard.index"))
-    # set_access_cookies(response, access_token)
-    # set_refresh_cookies(response, refresh_token)
-
     return _issue_new_tokens_and_cookies(user["uuid"])
   elif 'email' in claims:
     session['email'] = claims['email']
@@ -114,13 +100,6 @@ def onboarding():
 
       user = db_user.get_user_from_email(email)
       session['user'] = user
-
-      # refresh_token = create_refresh_token(identity=user["uuid"])
-      # access_token = create_access_token(identity=user["uuid"])
-
-      # response = redirect(url_for("dashboard.index"))
-      # set_access_cookies(response, access_token)
-      # set_refresh_cookies(response, refresh_token)
 
       return _issue_new_tokens_and_cookies(user["uuid"])
     else: return render_template('user/onboarding.html', invalid_username = True)
